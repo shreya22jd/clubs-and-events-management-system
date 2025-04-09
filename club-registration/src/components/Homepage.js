@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import d1 from "../assets/drama.jpeg";
 import aero from "../assets/aerokle.jpeg";
@@ -17,6 +17,63 @@ function Homepage() {
     { title: 'Music Meet' },
     { title: 'KannadaClub Meet' },
   ];
+  const [clubs, setClubs] = useState([
+    { id: 1, name: 'Drama Club', description: 'Bringing Stories to Life: Acting, Expression, and Creativity', image: d1, link: '/drama' },
+    { id: 2, name: 'UPSC Club', description: 'Empowering Aspirants, Shaping Future Leaders', image: upsc, link: '/upsc' },
+    { id: 3, name: 'Aerokle Club', description: 'Explores aerospace and mechanical engineering concepts.', image: aero, link: '/aerokle' },
+    { id: 4, name: 'Code Club', description: 'Turning Ideas into Applications: Learn, Build, Innovate', image: cc, link: '/code' },
+  ]);
+  
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [passwordPrompt, setPasswordPrompt] = useState(false);
+
+  const handleAdminAccess = () => {
+    setPasswordPrompt(true);
+  };
+
+  const verifyPassword = (password) => {
+    if (password === 'kle@admin') {
+      setIsAdmin(true);
+    }
+    setPasswordPrompt(false);
+  };
+
+  const addClub = () => {
+    const name = prompt('Enter Club Name:');
+    const description = prompt('Enter Club Description:');
+    const image = prompt('Enter Club Image Path (relative to assets folder):');
+    const link = prompt('Enter Club Link:');
+
+    if (name && description && image && link) {
+      setClubs([...clubs, { id: Date.now(), name, description, image: require(../assets/${image}), link }]);
+    } else {
+      alert('All fields are required to add a new club.');
+    }
+  };
+
+  const updateClub = () => {
+    const clubId = parseInt(prompt('Enter Club ID to update:'));
+    const club = clubs.find((c) => c.id === clubId);
+    if (club) {
+      const name = prompt('Enter New Club Name:', club.name);
+      const description = prompt('Enter New Club Description:', club.description);
+      const image = prompt('Enter New Club Image Path (relative to assets folder):', club.image);
+      const link = prompt('Enter New Club Link:', club.link);
+
+      setClubs(clubs.map((c) => (c.id === clubId ? { ...c, name, description, image: require(../assets/${image}), link } : c)));
+    } else {
+      alert('Club not found.');
+    }
+  };
+
+  const removeClub = () => {
+    const clubId = parseInt(prompt('Enter Club ID to remove:'));
+    if (clubs.find((c) => c.id === clubId)) {
+      setClubs(clubs.filter((c) => c.id !== clubId));
+    } else {
+      alert('Club not found.');
+    }
+  };
 
   return (
     <div className="homepage" style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#ffffff', margin: 0, padding: 0 }}>
@@ -24,108 +81,37 @@ function Homepage() {
        <Navbar />
 
       <div className="border-bar" style={{ width: '100%', height: '5px', backgroundColor: '#9b111e', margin: '10px 0' }}></div>
-{/* Clubs Section */}
-<section id="clubs" className="clubs-section" style={{ padding: '20px', backgroundColor: '#ffffff' }}>
-  <h2 style={{ fontSize: '24px', color: '#9b111e', margin: '20px 0', textAlign: 'center' }}>Clubs</h2>
-  <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', padding: '20px' }}>
-    
-    {/* Drama Club Box */}
-    <Link to="/drama" style={{ textDecoration: 'none' }}>
-      <div style={{
-        width: '250px',
-        height: '350px',  // Fixed height for consistency
-        padding: '20px',
-        backgroundColor: '#FAF0F1',
-        borderRadius: '10px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        textAlign: 'center',
-        cursor: 'pointer'
-      }}>
-        <img src={d1} alt="Club" style={{
-          width: '220px',  // Increased width for a bit wider images
-          height: '220px',  // Adjusted height to match the width increase
-          objectFit: 'cover',  // Ensure the image fills the space without distortion
-          borderRadius: '10px',
-          marginBottom: '10px'
-        }} />
-        <h3 style={{ fontSize: '20px', color: '#9b111e', marginBottom: '10px' }}>Drama Club</h3>
-        <p style={{ fontSize: '14px', color: '#6c757d' }}>Bringing Stories to Life: Acting, Expression, and Creativity</p>
-      </div>
-    </Link>
 
-    {/* UPSC Club Box */}
-    <Link to="/upsc" style={{ textDecoration: 'none' }}>
-      <div style={{
-        width: '250px',
-        height: '350px',  // Same height as other boxes
-        padding: '20px',
-        backgroundColor: '#FAF0F1',
-        borderRadius: '10px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        textAlign: 'center',
-        cursor: 'pointer'
-      }}>
-        <img src={upsc} alt="Club" style={{
-          width: '220px',  // Same increased width for consistency
-          height: '220px',  // Adjusted height to match the width increase
-          objectFit: 'cover',  // Maintain aspect ratio without stretching
-          borderRadius: '10px',
-          marginBottom: '10px'
-        }} />
-        <h3 style={{ fontSize: '20px', color: '#9b111e', marginBottom: '10px' }}>UPSC Club</h3>
-        <p style={{ fontSize: '14px', color: '#6c757d' }}>Empowering Aspirants, Shaping Future Leaders</p>
-      </div>
-    </Link>
-
-    {/* Music Club Box */}
-    <Link to="/aerokle" style={{ textDecoration: 'none' }}>
-      <div style={{
-        width: '250px',
-        height: '350px',  // Ensure this box is the same height
-        padding: '20px',
-        backgroundColor: '#FAF0F1',
-        borderRadius: '10px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        textAlign: 'center',
-        cursor: 'pointer'
-      }}>
-        <img src={aero} alt="Club" style={{
-          width: '220px',  // Increased width for a bit wider images
-          height: '220px',  // Adjusted height to match the width increase
-          objectFit: 'cover',  // Maintain aspect ratio without stretching
-          borderRadius: '10px',
-          marginBottom: '10px'
-        }} />
-        <h3 style={{ fontSize: '20px', color: '#9b111e', marginBottom: '10px' }}>Aerokle Club</h3>
-        <p style={{ fontSize: '14px', color: '#6c757d' }}>Explores aerospace and mechanical engineering concepts.</p>
-      </div>
-    </Link>
-
-    {/* Code Club Box */}
-    <Link to="/code" style={{ textDecoration: 'none' }}>
-      <div style={{
-        width: '250px',
-        height: '350px',  // Same height as others
-        padding: '20px',
-        backgroundColor: '#FAF0F1',
-        borderRadius: '10px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        textAlign: 'center',
-        cursor: 'pointer'
-      }}>
-        <img src={cc} alt="Club" style={{
-          width: '220px',  // Same width as the other images
-          height: '220px',  // Same height as the other images
-          objectFit: 'cover',  // Maintain aspect ratio without stretching
-          borderRadius: '10px',
-          marginBottom: '10px'
-        }} />
-        <h3 style={{ fontSize: '20px', color: '#9b111e', marginBottom: '10px' }}>Code Club</h3>
-        <p style={{ fontSize: '14px', color: '#6c757d' }}>Turning Ideas into Applications: Learn, Build, Innovate</p>
-      </div>
-    </Link>
-  </div>
-</section>
+      {/* Clubs Section */}
+      <section id="clubs" className="clubs-section" style={{ padding: '20px', backgroundColor: '#ffffff' }}>
+        <h2 style={{ fontSize: '24px', color: '#9b111e', margin: '20px 0', textAlign: 'center' }}>Clubs</h2>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', padding: '20px' }}>
+          {clubs.map((club) => (
+            <Link to={club.link} style={{ textDecoration: 'none' }} key={club.id}>
+              <div style={{
+                width: '250px',
+                height: '350px',
+                padding: '20px',
+                backgroundColor: '#FAF0F1',
+                borderRadius: '10px',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                textAlign: 'center',
+                cursor: 'pointer',
+              }}>
+                <img src={club.image} alt="Club" style={{
+                  width: '220px',
+                  height: '220px',
+                  objectFit: 'cover',
+                  borderRadius: '10px',
+                  marginBottom: '10px',
+                }} />
+                <h3 style={{ fontSize: '20px', color: '#9b111e', marginBottom: '10px' }}>{club.name}</h3>
+                <p style={{ fontSize: '14px', color: '#6c757d' }}>{club.description}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* Events Section */}
       <section className="events-section" style={{ padding: '20px', backgroundColor: '#ffffff' }}>
@@ -151,7 +137,34 @@ function Homepage() {
           make the most of their college experience.
         </p>
       </section>
-      
+        {/* Admin Section */}
+      {isAdmin ? (
+        <div style={{ textAlign: 'center', padding: '20px', backgroundColor: '#faf0f1' }}>
+          <h3 style={{ color: '#9b111e' }}>Admin Panel</h3>
+          <button onClick={addClub} style={{ margin: '10px', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#9b111e', color: 'white' }}>Add Club</button>
+          <button onClick={updateClub} style={{ margin: '10px', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#9b111e', color: 'white' }}>Update Club</button>
+          <button onClick={removeClub} style={{ margin: '10px', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#9b111e', color: 'white' }}>Remove Club</button>
+          <button onClick={() => setIsAdmin(false)} style={{ margin: '10px', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#6c757d', color: 'white' }}>Back</button>
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <button onClick={handleAdminAccess} style={{ margin: '10px', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#9b111e', color: 'white' }}>Admin Access</button>
+        </div>
+      )}
+
+      {/* Password Prompt */}
+      {passwordPrompt && (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <input
+            type="password"
+            placeholder="Enter Admin Password"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') verifyPassword(e.target.value);
+            }}
+            style={{ padding: '10px', marginBottom: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          />
+        </div>
+      )}
        {/* Footer Section */}
       <footer style={{ padding: '20px', backgroundColor: '#9b111e', color: '#ffffff', textAlign: 'center', marginTop: '20px' }}>
          <p style={{ fontSize: '14px', margin: 0 }}>© 2025 KLE Technological University | <a href="https://www.kletech.ac.in" style={{ color: '#ffffff', textDecoration: 'underline' }}>www.kletech.ac.in</a></p>
