@@ -1,0 +1,14 @@
+{
+  "name": "dbs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+  "build-client": "cd ../client && npm install && npm run build",
+  "postinstall": "npm run build-client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
