@@ -10,7 +10,7 @@ const feedbackRoutes = require('./routes/feedbackRoutes'); // Import feedback ro
 
 // Initialize express app
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3001; // Use the port from .env or default to 3001
 
 // Enable CORS for the frontend to access the backend
 app.use(cors({
@@ -24,10 +24,10 @@ app.use(express.json());
 
 // MySQL connection setup
 const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: '', // Add your MySQL password here
-  database: 'AllClubs' // Replace with your actual DB name
+  host: process.env.DB_HOST,       // Use environment variable for DB host
+  user: process.env.DB_USER,       // Use environment variable for DB user
+  password: process.env.DB_PASSWORD, // Use environment variable for DB password
+  database: process.env.DB_NAME,   // Use environment variable for DB name
 });
 
 db.connect((err) => {
