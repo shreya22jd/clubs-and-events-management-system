@@ -4,11 +4,13 @@ const mysql = require('mysql');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
+require('dotenv').config();
+
 const feedbackRoutes = require('./routes/feedbackRoutes'); // Import feedback routes
 
 // Initialize express app
 const app = express();
-const port = 3001;
+const port = process.env.PORT;
 
 // Enable CORS for the frontend to access the backend
 app.use(cors({
